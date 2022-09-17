@@ -1,7 +1,7 @@
 /*
 Type your name and student ID here
-	- Name:
-	- Student ID:
+	- Name: Wong Lap Yin
+	- Student ID: 1155147798
 */
 
 #include "Dependencies/glew/glew.h"
