@@ -115,11 +115,22 @@ void paintGL(void) {
 	// always run
 	// TODO:
 	// render your objects and control the transformation here
+
+	// Enable Depth Test to realize occulsion
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	// TODO:
+
+	// Close the window
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
+
+
 
 }
 
@@ -132,6 +143,9 @@ void initializedGL(void) {
 	// TODO:
 	sendDataToOpenGL();
 	installShaders();
+
+	// Enable Depth Test to realize occulsion
+	glEnable(GL_DEPTH_TEST);
 }
 
 int main(int argc, char* argv[]) {
