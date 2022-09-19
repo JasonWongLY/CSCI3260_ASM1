@@ -110,7 +110,8 @@ void installShaders() {
 
 GLuint groundVaoID, groundVboID;
 GLuint snorlaxVaoID, snorlaxVboID, snorlaxIndicesVboID;
-GLuint snorlaxFrontVaoID, snorlaxFrontVboID, snorlaxFrontIndicesVboID;
+GLuint snorlaxEyeVaoID, snorlaxEyeVboID, snorlaxEyeIndicesVboID;
+
 void sendDataToOpenGL() {
 	// TODO:
 	// create 3D objects and/or 2D objects and/or lines (points) here and bind to VAOs & VBOs
@@ -245,8 +246,47 @@ void sendDataToOpenGL() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(snorlaxIndices) * sizeof(GLushort), snorlaxIndices, GL_STATIC_DRAW);
 
 
-	
-	
+	const GLfloat snorlaxEye[] =
+	{
+		-snorlaxhead + 0.5f, +1.9f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		-snorlaxhead + 0.5f, +1.8f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.5f, +1.9f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.5f, +1.8f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+
+		-snorlaxhead + 0.3f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		-snorlaxhead + 0.3f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		-0.2f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		-0.2f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+
+		+0.2f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		+0.2f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.3f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.3f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+	};
+	GLushort snorlaxEyeIndices[] =
+	{
+		0,1,2,
+		1,2,3,
+
+		4,5,6,
+		5,6,7,
+
+		8,9,10,
+		9,10,11,
+	};
+	glGenVertexArrays(1, &snorlaxEyeVaoID);
+	glBindVertexArray(snorlaxEyeVaoID);
+	glGenBuffers(1, &snorlaxEyeVboID);
+	glBindBuffer(GL_ARRAY_BUFFER, snorlaxEyeVboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(snorlaxEye), snorlaxEye, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glGenBuffers(1, &snorlaxEyeIndicesVboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, snorlaxEyeIndicesVboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(snorlaxEyeIndices) * sizeof(GLushort), snorlaxEyeIndices, GL_STATIC_DRAW);
+
 }
 
 void tran(std::string x)
@@ -261,7 +301,7 @@ void tran(std::string x)
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
 
 	}
-	if (x == "snorlax")
+	if ((x == "snorlax") || (x=="snorlaxEye"))
 	{
 		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 1.0f, 2.3f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.3f, 0.3f));
@@ -310,7 +350,9 @@ void paintGL(void) {
 	glBindVertexArray(snorlaxVaoID);
 	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 
-	
+	tran("snorlaxEye");
+	glBindVertexArray(snorlaxEyeVaoID);
+	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 	
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
