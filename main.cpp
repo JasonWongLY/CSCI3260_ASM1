@@ -15,10 +15,14 @@ Type your name and student ID here
 
 
 GLint programID;
-float x_delta = 0.1f;
+float x_delta = 0.2f;
 int x_press_num = 0;
+float z_delta = 0.2f;
+int z_press_num = 0;
 float r_delta = 0.1f;
 int r_press_num = 0;
+float scale_delta = 0.05f;
+int scale_press_num = 0;
 
 void get_OpenGL_info() {
 	// OpenGL information
@@ -156,42 +160,110 @@ void sendDataToOpenGL() {
 	const float snorlaxhead = 0.85f;
 	const GLfloat snorlax[] =
 	{
-		-1.0f, +1.5f, -1.0f,  +0.0608f, +0.251f, +0.3608f,	//0
-		-1.0f, -1.0f, -1.0f,  +0.1608f, +0.451f, +0.5608f,	//1
-		+1.0f, +1.5f, -1.0f,  +0.1608f, +0.451f, +0.5608f,	//2
-		+1.0f, -1.0f, -1.0f,  +0.1608f, +0.451f, +0.5608f,	//3
-		-1.0f, -1.0f, +1.0f,  +0.1608f, +0.451f, +0.5608f,	//4
-		+1.0f, -1.0f, +1.0f,  +0.0608f, +0.251f, +0.3608f,	//5
-		+1.0f, +1.5f, +1.0f,  +0.1608f, +0.451f, +0.5608f,	//6
-		-1.0f, +1.5f, +1.0f,  +0.1608f, +0.451f, +0.5608f,	//7
+		-1.0f, +1.5f, -1.0f+0.2f,    +0.0608f, +0.251f, +0.3608f,	//0
+		-1.0f, -1.0f, -1.0f + 0.2f,  +0.1608f, +0.451f, +0.5608f,	//1
+		+1.0f, +1.5f, -1.0f + 0.2f,  +0.1608f, +0.451f, +0.5608f,	//2
+		+1.0f, -1.0f, -1.0f + 0.2f,  +0.1608f, +0.451f, +0.5608f,	//3
+		-1.0f, -1.0f, +1.0f - 0.2f,  +0.1608f, +0.451f, +0.5608f,	//4
+		+1.0f, -1.0f, +1.0f - 0.2f,  +0.0608f, +0.251f, +0.3608f,	//5
+		+1.0f, +1.5f, +1.0f - 0.2f,  +0.1608f, +0.451f, +0.5608f,	//6
+		-1.0f, +1.5f, +1.0f - 0.2f,  +0.1608f, +0.451f, +0.5608f,	//7
 
-		-snorlaxhead, +snorlaxhead + 2.0f, -snorlaxhead, +0.0608f, +0.251f, +0.3608f,	//8
-		-snorlaxhead, -1.0f + 2.5f, -snorlaxhead,		+0.1608f, +0.451f, +0.5608f,	//9
-		+snorlaxhead, +snorlaxhead + 2.0f, -snorlaxhead, +0.1608f, +0.451f, +0.5608f,	//10
-		+snorlaxhead, -1.0f + 2.5f, -snorlaxhead,		+0.1608f, +0.451f, +0.5608f,	//11
-		-snorlaxhead, -1.0f + 2.5f, +snorlaxhead,		+0.1608f, +0.451f, +0.5608f,	//12
-		+snorlaxhead, -1.0f + 2.5f, +snorlaxhead,		+0.0608f, +0.251f, +0.3608f,	//13
-		+snorlaxhead, +snorlaxhead + 2.0f, +snorlaxhead, +0.1608f, +0.451f, +0.5608f,	//14
-		-snorlaxhead, +snorlaxhead + 2.0f, +snorlaxhead, +0.1608f, +0.451f, +0.5608f,	//15
+		-snorlaxhead, +snorlaxhead + 2.0f, -snorlaxhead + 0.2f,     +0.0608f, +0.251f, +0.3608f,	//8
+		-snorlaxhead, -1.0f + 2.5f, -snorlaxhead + 0.2f,		    +0.1608f, +0.451f, +0.5608f,	//9
+		+snorlaxhead, +snorlaxhead + 2.0f, -snorlaxhead + 0.2f,     +0.1608f, +0.451f, +0.5608f,	//10
+		+snorlaxhead, -1.0f + 2.5f, -snorlaxhead + 0.2f,		    +0.1608f, +0.451f, +0.5608f,	//11
+		-snorlaxhead, -1.0f + 2.5f, +snorlaxhead - 0.2f,		    +0.1608f, +0.451f, +0.5608f,	//12
+		+snorlaxhead, -1.0f + 2.5f, +snorlaxhead - 0.2f,		    +0.0608f, +0.251f, +0.3608f,	//13
+		+snorlaxhead, +snorlaxhead + 2.0f, +snorlaxhead - 0.2f,     +0.1608f, +0.451f, +0.5608f,	//14
+		-snorlaxhead, +snorlaxhead + 2.0f, +snorlaxhead - 0.2f,     +0.1608f, +0.451f, +0.5608f,	//15
 
 		
-		-0.8f, +1.5f, +1.01f,   +0.945f, +0.898f, +0.847f,	
-		+0.8f, +1.51f, +1.01f,   +0.945f, +0.898f, +0.847f,	
-		-0.8f, -0.7f, +1.01f,   +0.945f, +0.898f, +0.847f,	
-		+0.8f, -0.7f, +1.01f,   +0.945f, +0.898f, +0.847f,	
-		-0.8f, +1.05f, +0.85f,  +0.945f, +0.898f, +0.847f,	
-		+0.8f, +1.05f, +0.85f,  +0.945f, +0.898f, +0.847f,	
+		-0.8f, +1.5f, +1.01f - 0.2f,   +0.945f, +0.898f, +0.847f,	//16
+		+0.8f, +1.51f, +1.01f - 0.2f,   +0.945f, +0.898f, +0.847f,	//17
+		-0.8f, -0.7f, +1.01f - 0.2f,   +0.945f, +0.898f, +0.847f,	//18
+		+0.8f, -0.7f, +1.01f - 0.2f,   +0.945f, +0.898f, +0.847f,	//19
+		-0.8f, +1.05f, +0.85f - 0.2f,  +0.945f, +0.898f, +0.847f,	//20
+		+0.8f, +1.05f, +0.85f - 0.2f,  +0.945f, +0.898f, +0.847f,	//21
 
-		-snorlaxhead+0.15f, -1.0f + 2.5f, +snorlaxhead + 0.01f,		+0.945f, +0.898f, +0.847f,	
-		+snorlaxhead-0.15f, -1.0f + 2.5f, +snorlaxhead + 0.01f,		+0.945f, +0.898f, +0.847f,	
-		+snorlaxhead-0.15f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f,	+0.945f, +0.898f, +0.847f,	
-		-snorlaxhead+0.15f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f,	+0.945f, +0.898f, +0.847f,	
-		+0.0f, +snorlaxhead + 1.65f, +snorlaxhead + 0.02f,			+0.945f, +0.898f, +0.847f,	
-		+0.2f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f,				+0.945f, +0.898f, +0.847f,	
-		-0.2f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f,				+0.945f, +0.898f, +0.847f,	
+		-snorlaxhead+0.15f, -1.0f + 2.5f, +snorlaxhead + 0.01f - 0.2f,		+0.945f, +0.898f, +0.847f,		//22
+		+snorlaxhead-0.15f, -1.0f + 2.5f, +snorlaxhead + 0.01f - 0.2f,		+0.945f, +0.898f, +0.847f,		//23
+		+snorlaxhead-0.15f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f - 0.2f,	+0.945f, +0.898f, +0.847f,	//24
+		-snorlaxhead+0.15f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f - 0.2f,	+0.945f, +0.898f, +0.847f,	//25
+		+0.0f, +snorlaxhead + 1.65f, +snorlaxhead + 0.02f - 0.2f,			+0.945f, +0.898f, +0.847f,		//26
+		+0.2f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f - 0.2f,				+0.945f, +0.898f, +0.847f,	//27
+		-0.2f, +snorlaxhead + 1.9f, +snorlaxhead + 0.02f - 0.2f,				+0.945f, +0.898f, +0.847f,	//28
 
+		+1.0f, +1.4f, -0.25f,	+0.0608f, +0.251f, +0.3608f,	//29
+		+1.0f, +0.4f, -0.25f,	+0.1608f, +0.451f, +0.5608f,	//30
+		+1.6f, +1.0f, -0.25f,	+0.1608f, +0.451f, +0.5608f,	//31
+		+1.6f, +0.0f, -0.25f,	+0.1608f, +0.451f, +0.5608f,	//32
+		+1.0f, +0.4f, +0.25f,	+0.1608f, +0.451f, +0.5608f,	//33
+		+1.6f, +0.0f, +0.25f,	+0.0608f, +0.251f, +0.3608f,	//34
+		+1.6f, +1.0f, +0.25f,	+0.1608f, +0.451f, +0.5608f,	//35
+		+1.0f, +1.4f, +0.25f,	+0.1608f, +0.451f, +0.5608f,	//36
+
+		-1.0f, +1.4f, -0.25f,	+0.0608f, +0.251f, +0.3608f,	//37
+		-1.0f, +0.4f, -0.25f,	+0.1608f, +0.451f, +0.5608f,	//38
+		-1.6f, +1.0f, -0.25f,	+0.1608f, +0.451f, +0.5608f,	//39
+		-1.6f, +0.0f, -0.25f,	+0.1608f, +0.451f, +0.5608f,	//40
+		-1.0f, +0.4f, +0.25f,	+0.1608f, +0.451f, +0.5608f,	//41
+		-1.6f, +0.0f, +0.25f,	+0.0608f, +0.251f, +0.3608f,	//42
+		-1.6f, +1.0f, +0.25f,	+0.1608f, +0.451f, +0.5608f,	//43
+		-1.0f, +1.4f, +0.25f,	+0.1608f, +0.451f, +0.5608f,	//44
+
+		//left leg
+		0.55f, +0.0f, 0.8f,		+0.745f, +0.698f, +0.647f,		//45
+		0.55f, -1.0f, 0.8f,		+0.945f, +0.898f, +0.847f,		//46
+		1.05f, +0.0f, 0.8f,		+0.945f, +0.898f, +0.847f,		//47
+		1.05f, -1.0f, 0.8f,		+0.945f, +0.898f, +0.847f,		//48
+		0.55f, -1.0f, 1.1f,		+0.945f, +0.898f, +0.847f,		//49
+		1.05f, -1.0f, 1.1f,		+0.745f, +0.698f, +0.647f,		//50
+		1.05f, +0.0f, 1.1f,		+0.945f, +0.898f, +0.847f,		//51
+		0.55f, +0.0f ,1.1f,		+0.945f, +0.898f, +0.847f,		//52
+
+		0.65f, -0.91f, 1.11f,		+0.498f, +0.435f, +0.384f,		//53
+		0.95f, -0.9f, 1.11f,		+0.498f, +0.435f, +0.384f,		//54
+		0.95f, -0.31f, 1.11f,		+0.498f, +0.435f, +0.384f,		//55
+		0.65f, -0.31f ,1.11f,		+0.498f, +0.435f, +0.384f,		//56
+
+		//right leg
+		-0.55f, +0.0f, 0.8f,		+0.745f, +0.698f, +0.647f,		//57
+		-0.55f, -1.0f, 0.8f,		+0.945f, +0.898f, +0.847f,		//58
+		-1.05f, +0.0f, 0.8f,		+0.945f, +0.898f, +0.847f,		//59
+		-1.05f, -1.0f, 0.8f,		+0.945f, +0.898f, +0.847f,		//60
+		-0.55f, -1.0f, 1.1f,		+0.945f, +0.898f, +0.847f,		//61
+		-1.05f, -1.0f, 1.1f,		+0.745f, +0.698f, +0.647f,		//62
+		-1.05f, +0.0f, 1.1f,		+0.945f, +0.898f, +0.847f,		//63
+		-0.55f, +0.0f ,1.1f,		+0.945f, +0.898f, +0.847f,		//64
+		
+		-0.65f, -0.91f, 1.11f,		+0.498f, +0.435f, +0.384f,		//65
+		-0.95f, -0.9f, 1.11f,		+0.498f, +0.435f, +0.384f,		//66
+		-0.95f, -0.31f, 1.11f,		+0.498f, +0.435f, +0.384f,		//67
+		-0.65f, -0.31f ,1.11f,		+0.498f, +0.435f, +0.384f,		//68
+
+		//left ear
+		+snorlaxhead - 0.5f, 3.35f, -0.2f,		+0.0608f, +0.251f, +0.3608f,		//69
+		+snorlaxhead - 0.5f, 2.85f, -0.2f,		+0.1608f, +0.451f, +0.5608f,		//70
+		+snorlaxhead - 0.2f, 3.35f, -0.2f,		+0.1608f, +0.451f, +0.5608f,		//71
+		+snorlaxhead - 0.2f, 2.85f, -0.2f,		+0.1608f, +0.451f, +0.5608f,		//72
+		+snorlaxhead - 0.5f, 2.85f, 0.2f,		+0.1608f, +0.451f, +0.5608f,		//73
+		+snorlaxhead - 0.2f, 2.85f, 0.2f,		+0.0608f, +0.251f, +0.3608f,		//74
+		+snorlaxhead - 0.2f, 3.35f, 0.2f,		+0.1608f, +0.451f, +0.5608f,		//75
+		+snorlaxhead - 0.5f, 3.35f, 0.2f,		+0.1608f, +0.451f, +0.5608f,		//76
+
+		//right ear
+		-snorlaxhead + 0.5f, 3.35f, -0.2f,		+0.0608f, +0.251f, +0.3608f,		//77
+		-snorlaxhead + 0.5f, 2.85f, -0.2f,		+0.1608f, +0.451f, +0.5608f,		//78
+		-snorlaxhead + 0.2f, 3.35f, -0.2f,		+0.1608f, +0.451f, +0.5608f,		//79
+		-snorlaxhead + 0.2f, 2.85f, -0.2f,		+0.1608f, +0.451f, +0.5608f,		//80
+		-snorlaxhead + 0.5f, 2.85f, 0.2f,		+0.1608f, +0.451f, +0.5608f,		//81
+		-snorlaxhead + 0.2f, 2.85f, 0.2f,		+0.0608f, +0.251f, +0.3608f,		//82
+		-snorlaxhead + 0.2f, 3.35f, 0.2f,		+0.1608f, +0.451f, +0.5608f,		//83
+		-snorlaxhead + 0.5f, 3.35f, 0.2f,		+0.1608f, +0.451f, +0.5608f,		//84
 	};
 	GLushort snorlaxIndices[] = {
+		// body
 		  0,2,3,
 		  0,1,3,
 		  0,2,6,
@@ -205,7 +277,7 @@ void sendDataToOpenGL() {
 		  5,6,7,
 		  5,4,7,
 		  
-
+		//head
 		8,10,11,
 		8,9,11,
 		8,10,14,
@@ -219,17 +291,102 @@ void sendDataToOpenGL() {
 		13,14,15,
 		13,12,15,
 
+		//body
 		18,17,16,
 		17,18,19,
 		20,16,17,
 		20,17,21,
-
+		
+		//head
 		22,25,28,
 		22,28,26,
 		22,26,23,
 		23,26,27,
 		23,27,24,
 
+		//left hand
+		29,31,32,
+		29,32,30,
+		29,31,35,
+		29,36,35,
+		29,36,33,
+		29,33,30,
+		34,35,31,
+		34,32,31,
+		34,30,32,
+		34,33,30,
+		34,35,36,
+		34,33,36,
+		//right hand
+		29+8,31+8,32+8,
+		29+8,30+8,32+8,
+		29+8,31+8,35+8,
+		29+8,36+8,35+8,
+		29+8,36+8,33+8,
+		29+8,30+8,33+8,
+		34+8,35+8,31+8,
+		34+8,32+8,31+8,
+		34+8,32+8,30+8,
+		34+8,30+8,33+8,
+		34+8,35+8,36+8,
+		34+8,33+8,36+8,
+
+		//left leg
+		0+45,2+45,3+45,
+		0+45,1+45,3+45,
+		0+45,2+45,6+45,
+		0+45,7+45,6+45,
+		0+45,7+45,4+45,
+		0+45,1+45,4+45,
+		5+45,6+45,2+45,
+		5+45,3+45,2+45,
+		5+45,3+45,1+45,
+		5+45,1+45,4+45,
+		5+45,6+45,7+45,
+		5+45,4+45,7+45,
+		53,54,55,
+		53,55,56,
+
+		0+57,2+57,3+57,
+		0+57,1+57,3+57,
+		0+57,2+57,6+57,
+		0+57,7+57,6+57,
+		0+57,7+57,4+57,
+		0+57,1+57,4+57,
+		5+57,6+57,2+57,
+		5+57,3+57,2+57,
+		5+57,3+57,1+57,
+		5+57,1+57,4+57,
+		5+57,6+57,7+57,
+		5+57,4+57,7+57,
+		65,66,67,
+		65,67,68,
+
+		0+69,2+69,3+69,
+		0+69,1+69,3+69,
+		0+69,2+69,6+69,
+		0+69,7+69,6+69,
+		0+69,7+69,4+69,
+		0+69,1+69,4+69,
+		5+69,6+69,2+69,
+		5+69,3+69,2+69,
+		5+69,3+69,1+69,
+		5+69,1+69,4+69,
+		5+69,6+69,7+69,
+		5+69,4+69,7+69,
+
+		0+77, 2+77, 3+77,
+		0+77, 1+77, 3+77,
+		0+77, 2+77, 6+77,
+		0+77, 7+77, 6+77,
+		0+77, 7+77, 4+77,
+		0+77, 1+77, 4+77,
+		5+77, 6+77, 2+77,
+		5+77, 3+77, 2+77,
+		5+77, 3+77, 1+77,
+		5+77, 1+77, 4+77,
+		5+77, 6+77, 7+77,
+		5+77, 4+77, 7+77,
 	};
 
 	glGenVertexArrays(1, &snorlaxVaoID);
@@ -248,20 +405,20 @@ void sendDataToOpenGL() {
 
 	const GLfloat snorlaxEye[] =
 	{
-		-snorlaxhead + 0.5f, +1.9f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		-snorlaxhead + 0.5f, +1.8f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		+snorlaxhead - 0.5f, +1.9f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		+snorlaxhead - 0.5f, +1.8f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		-snorlaxhead + 0.5f, +1.9f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		-snorlaxhead + 0.5f, +1.8f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.5f, +1.9f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.5f, +1.8f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
 
-		-snorlaxhead + 0.3f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		-snorlaxhead + 0.3f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		-0.2f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		-0.2f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		-snorlaxhead + 0.3f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		-snorlaxhead + 0.3f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		-0.2f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		-0.2f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
 
-		+0.2f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		+0.2f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		+snorlaxhead - 0.3f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
-		+snorlaxhead - 0.3f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f,	+0.0f, +0.0f, +0.0f,
+		+0.2f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		+0.2f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.3f, +snorlaxhead + 1.5f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
+		+snorlaxhead - 0.3f, +snorlaxhead + 1.4f, +snorlaxhead + 0.02f - 0.2f,	+0.0f, +0.0f, +0.0f,
 	};
 	GLushort snorlaxEyeIndices[] =
 	{
@@ -303,8 +460,8 @@ void tran(std::string x)
 	}
 	if ((x == "snorlax") || (x=="snorlaxEye"))
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 1.0f, 2.3f));
-		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.3f, 0.3f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 1.0f, z_delta * z_press_num + 2.3f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), r_delta * r_press_num, glm::vec3(0, 1, 0));
 	}
 
@@ -348,7 +505,7 @@ void paintGL(void) {
 
 	tran("snorlax");
 	glBindVertexArray(snorlaxVaoID);
-	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, 120 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 
 	tran("snorlaxEye");
 	glBindVertexArray(snorlaxEyeVaoID);
@@ -357,6 +514,12 @@ void paintGL(void) {
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
+	if (x_press_num > 5) x_press_num = 5;
+	if (x_press_num < -20) x_press_num = -20;
+	if (z_press_num > 3) z_press_num = 3;
+	if (z_press_num < -15) z_press_num = -15;
+	if (scale_press_num > 4) scale_press_num = 4;
+	if (scale_press_num < -3) scale_press_num = -3;
 	glFlush();
 
 }
@@ -372,11 +535,23 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
 		x_press_num += 1;
 	}
+	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
+		z_press_num -= 1;
+	}
+	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
+		z_press_num += 1;
+	}
 	if (key == GLFW_KEY_V && action == GLFW_PRESS) {
 		r_press_num -= 1;
 	}
 	if (key == GLFW_KEY_C && action == GLFW_PRESS) {
 		r_press_num += 1;
+	}
+	if (key == GLFW_KEY_Z && action == GLFW_PRESS) {
+		scale_press_num -= 1;
+	}
+	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
+		scale_press_num += 1;
 	}
 }
 
