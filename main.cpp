@@ -12,6 +12,12 @@ Type your name and student ID here
 
 #include <iostream>
 #include <fstream>
+#include <time.h>
+
+clock_t now_time;
+int start_time = 0;
+clock_t second_time;
+int diff_time = 0;
 
 
 GLint programID;
@@ -23,6 +29,7 @@ float r_delta = 0.1f;
 int r_press_num = 0;
 float scale_delta = 0.05f;
 int scale_press_num = 0;
+bool sleep = false;
 
 void get_OpenGL_info() {
 	// OpenGL information
@@ -115,7 +122,7 @@ void installShaders() {
 GLuint groundVaoID, groundVboID;
 GLuint snorlaxVaoID, snorlaxVboID, snorlaxIndicesVboID;
 GLuint snorlaxEyeVaoID, snorlaxEyeVboID, snorlaxEyeIndicesVboID;
-
+GLuint sleepingZVaoID, sleepingZVboID, sleepingZIndicesVboID;
 void sendDataToOpenGL() {
 	// TODO:
 	// create 3D objects and/or 2D objects and/or lines (points) here and bind to VAOs & VBOs
@@ -444,6 +451,37 @@ void sendDataToOpenGL() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, snorlaxEyeIndicesVboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(snorlaxEyeIndices) * sizeof(GLushort), snorlaxEyeIndices, GL_STATIC_DRAW);
 
+	
+	const GLfloat sleepingZ[] =
+	{
+		-1.0f, +1.0f, -1.0f,			1.0f, 1.0f, 1.0f,
+		-1.0f, +0.5f, -1.0f,			1.0f, 1.0f, 1.0f,
+		-1.0f, -1.0f, -1.0f,			1.0f, 1.0f, 1.0f,
+		+1.0f, +1.0f, -1.0f,			1.0f, 1.0f, 1.0f,
+		+1.0f, +0.5f, -1.0f,			1.0f, 1.0f, 1.0f,
+		+1.0f, -0.5f, -1.0f,			1.0f, 1.0f, 1.0f,
+		+1.0f, -1.0f, -1.0f,			1.0f, 1.0f, 1.0f,
+	};
+
+	GLushort sleepingZIndices[] =
+	{
+		0,1,3,
+		3,4,2,
+		2,5,6,
+	};
+	
+	glGenVertexArrays(1, &sleepingZVaoID);
+	glBindVertexArray(sleepingZVaoID);
+	glGenBuffers(1, &sleepingZVboID);
+	glBindBuffer(GL_ARRAY_BUFFER, sleepingZVboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(sleepingZ), sleepingZ, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glGenBuffers(1, &sleepingZIndicesVboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sleepingZIndicesVboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(sleepingZIndices) * sizeof(GLushort), sleepingZIndices, GL_STATIC_DRAW);
 }
 
 void tran(std::string x)
@@ -463,6 +501,28 @@ void tran(std::string x)
 		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 1.0f, z_delta * z_press_num + 2.3f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), r_delta * r_press_num, glm::vec3(0, 1, 0));
+	}
+	if ((x == "snorlaxSleep") || (x == "snorlaxSleepEye"))
+	{
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 1.0f, z_delta * z_press_num + 2.3f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	}
+	if (x == "sleepingZ")
+	{
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 3.0f, 2.0f, z_delta * z_press_num + 4.0f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.0001f*diff_time+0.3f, 0.0001*diff_time+0.3f, 3.0f));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
+		if (diff_time >= 2000)
+		{
+			now_time = clock();
+			diff_time = 0;
+			start_time = 0;
+		}
+		else
+		{
+			diff_time = (clock() - now_time);
+		}
 	}
 
 	
@@ -503,23 +563,50 @@ void paintGL(void) {
 	glBindVertexArray(groundVaoID);
 	glDrawArrays(GL_TRIANGLES, 0, 6);  //render primitives from array data
 
-	tran("snorlax");
-	glBindVertexArray(snorlaxVaoID);
-	glDrawElements(GL_TRIANGLES, 120 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+	if (sleep == false) {
+		tran("snorlax");
+		glBindVertexArray(snorlaxVaoID);
+		glDrawElements(GL_TRIANGLES, 120 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 
-	tran("snorlaxEye");
-	glBindVertexArray(snorlaxEyeVaoID);
-	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
-	
+		tran("snorlaxEye");
+		glBindVertexArray(snorlaxEyeVaoID);
+		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+	}
+	else
+	{
+		tran("snorlaxSleep");
+		glBindVertexArray(snorlaxVaoID);
+		glDrawElements(GL_TRIANGLES, 120 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+
+		tran("snorlaxSleepEye");
+		glBindVertexArray(snorlaxEyeVaoID);
+		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+
+		tran("sleepingZ");
+		glBindVertexArray(sleepingZVaoID);
+		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+	}
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
+	if ((x_press_num == 5) && (z_press_num == -15)) {
+
+		if (sleep == false)
+		{
+			now_time = clock();
+		}
+
+		sleep = true;
+
+	}
+	
+	else sleep = false;
 	if (x_press_num > 5) x_press_num = 5;
 	if (x_press_num < -20) x_press_num = -20;
 	if (z_press_num > 3) z_press_num = 3;
 	if (z_press_num < -15) z_press_num = -15;
 	if (scale_press_num > 4) scale_press_num = 4;
-	if (scale_press_num < -3) scale_press_num = -3;
+	if (scale_press_num < -2) scale_press_num = -2;
 	glFlush();
 
 }
