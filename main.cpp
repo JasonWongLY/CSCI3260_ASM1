@@ -19,7 +19,7 @@ int start_time = 0;
 clock_t second_time;
 int diff_time = 0;
 
-
+float angle = 0.0f;
 GLint programID;
 float x_delta = 0.2f;
 int x_press_num = 0;
@@ -123,6 +123,7 @@ GLuint groundVaoID, groundVboID;
 GLuint snorlaxVaoID, snorlaxVboID, snorlaxIndicesVboID;
 GLuint snorlaxEyeVaoID, snorlaxEyeVboID, snorlaxEyeIndicesVboID;
 GLuint sleepingZVaoID, sleepingZVboID, sleepingZIndicesVboID;
+GLuint pokeballVaoID, pokeballVboID, pokeballIndicesVboID;
 void sendDataToOpenGL() {
 	// TODO:
 	// create 3D objects and/or 2D objects and/or lines (points) here and bind to VAOs & VBOs
@@ -144,12 +145,12 @@ void sendDataToOpenGL() {
 		1.0f, -0.5f, 0.0f,		+0.455f, +0.4f, +0.23f,
 		-1.0f, -0.5f, 0.0f,		+0.455f, +0.4f, +0.23f,*/
 
-		-1.0f, +0.0f, -1.0f,      +0.2f, +0.2f, +0.3f,
-		-1.0f, +0.0f, +1.0f,      +0.52f, +0.37f, +0.26f,
-		+1.0f, +0.0f, -1.0f,      +0.2f, +0.2f, +0.3f,
-		-1.0f, +0.0f, +1.0f,      +0.52f, +0.37f, +0.26f,
-		+1.0f, +0.0f, +1.0f,      +0.52f, +0.37f, +0.26f,
-		+1.0f, +0.0f, -1.0f,      +0.2f, +0.2f, +0.3f,
+		-1.0f, +0.0f, -1.0f,      0.3373f, 0.4902f, 0.2745f,
+		-1.0f, +0.0f, +1.0f,      0.3373f, 0.4902f, 0.2745f,
+		+1.0f, +0.0f, -1.0f,      0.3373f, 0.4902f, 0.2745f,
+		-1.0f, +0.0f, +1.0f,      0.3373f, 0.4902f, 0.2745f,
+		+1.0f, +0.0f, +1.0f,      0.3373f, 0.4902f, 0.2745f,
+		+1.0f, +0.0f, -1.0f,      0.3373f, 0.4902f, 0.2745f,
 	};
 
 	
@@ -482,6 +483,107 @@ void sendDataToOpenGL() {
 	glGenBuffers(1, &sleepingZIndicesVboID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, sleepingZIndicesVboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(sleepingZIndices) * sizeof(GLushort), sleepingZIndices, GL_STATIC_DRAW);
+
+
+	const GLfloat pokeball[] =
+	{
+		-1.0f, +1.0f, -1.0f,		0.741f, 0.0f, 0.0f,
+		-1.0f, +0.001f, -1.0f,		0.941f, 0.0f, 0.0f,
+		+1.0f, +1.0f, -1.0f,		0.941f, 0.0f, 0.0f,
+		+1.0f, +0.001f, -1.0f,		0.941f, 0.0f, 0.0f,
+		-1.0f, +0.001f, +1.0f,		0.941f, 0.0f, 0.0f,
+		+1.0f, +0.001f, +1.0f,		0.741f, 0.0f, 0.0f,
+		+1.0f, +1.0f, +1.0f,		0.941f, 0.0f, 0.0f,
+		-1.0f, +1.0f, +1.0f,		0.941f, 0.0f, 0.0f,
+
+
+		-1.0f, -0.001f, -1.0f,		0.741f, 0.741f, 0.741f,
+		-1.0f, -1.0f,   -1.0f,		0.941f, 0.941f, 0.941f,
+		+1.0f, -0.001f, -1.0f,		0.941f, 0.941f, 0.941f,
+		+1.0f, -1.0f,   -1.0f,		0.941f, 0.941f, 0.941f,
+		-1.0f, -1.0f,   +1.0f,		0.941f, 0.941f, 0.941f,
+		+1.0f, -1.0f,   +1.0f,		0.741f, 0.741f, 0.741f,
+		+1.0f, -0.001f, +1.0f,		0.941f, 0.941f, 0.941f,
+		-1.0f, -0.001f, +1.0f,		0.941f, 0.941f, 0.941f,
+
+		-1.001f, +0.101f, -1.001f,		0.1333f, 0.1333f, 0.1411f,
+		-1.001f, -0.101f, -1.001f,		0.1333f, 0.1333f, 0.1411f,
+		+1.001f, +0.101f, -1.001f,		0.1333f, 0.1333f, 0.1411f,
+		+1.001f, -0.101f, -1.001f,		0.1333f, 0.1333f, 0.1411f,
+		-1.001f, -0.101f, +1.001f,		0.1333f, 0.1333f, 0.1411f,
+		+1.001f, -0.101f, +1.001f,		0.1333f, 0.1333f, 0.1411f,
+		+1.001f, +0.101f, +1.001f,		0.1333f, 0.1333f, 0.1411f,
+		-1.001f, +0.101f, +1.001f,		0.1333f, 0.1333f, 0.1411f,
+
+		-0.402f, +0.402f, +1.002f,		0.1333f, 0.1333f, 0.1411f,
+		+0.402f, +0.402f, +1.002f,		0.1333f, 0.1333f, 0.1411f,
+		-0.402f, -0.402f, +1.002f,		0.1333f, 0.1333f, 0.1411f,
+		+0.402f, -0.402f, +1.002f,		0.1333f, 0.1333f, 0.1411f,
+
+		-0.203f, +0.203f, +1.003f,		0.941f, 0.941f, 0.941f,
+		+0.203f, +0.203f, +1.003f,		0.941f, 0.941f, 0.941f,
+		-0.203f, -0.203f, +1.003f,		0.941f, 0.941f, 0.941f,
+		+0.203f, -0.203f, +1.003f,		0.941f, 0.941f, 0.941f,
+	};
+
+	GLushort pokeballIndices[] =
+	{
+		0,2,3,
+		0,1,3,
+		0,2,6,
+		0,7,6,
+		0,7,4,
+		0,1,4,
+		5,6,2,
+		5,3,2,
+		5,3,1,
+		5,1,4,
+		5,6,7,
+		5,4,7,
+
+		0+8,2+8,3+8,
+		0+8,1+8,3+8,
+		0+8,2+8,6+8,
+		0+8,7+8,6+8,
+		0+8,7+8,4+8,
+		0+8,1+8,4+8,
+		5+8,6+8,2+8,
+		5+8,3+8,2+8,
+		5+8,3+8,1+8,
+		5+8,1+8,4+8,
+		5+8,6+8,7+8,
+		5+8,4+8,7+8,
+
+		0+16,2+16,3+16,
+		0+16,1+16,3+16,
+		0+16,2+16,6+16,
+		0+16,7+16,6+16,
+		0+16,7+16,4+16,
+		0+16,1+16,4+16,
+		5+16,6+16,2+16,
+		5+16,3+16,2+16,
+		5+16,3+16,1+16,
+		5+16,1+16,4+16,
+		5+16,6+16,7+16,
+		5+16,4+16,7+16,
+
+		24,25,26,
+		25,26,27,
+		28,29,30,
+		29,30,31,
+	};
+	glGenVertexArrays(1, &pokeballVaoID);
+	glBindVertexArray(pokeballVaoID);
+	glGenBuffers(1, &pokeballVboID);
+	glBindBuffer(GL_ARRAY_BUFFER, pokeballVboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(pokeball), pokeball, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glGenBuffers(1, &pokeballIndicesVboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pokeballIndicesVboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(pokeballIndices) * sizeof(GLushort), pokeballIndices, GL_STATIC_DRAW);
 }
 
 void tran(std::string x)
@@ -500,7 +602,7 @@ void tran(std::string x)
 	{
 		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 1.0f, z_delta * z_press_num + 2.3f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
-		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), r_delta * r_press_num, glm::vec3(0, 1, 0));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0, 1, 0));
 	}
 	if ((x == "snorlaxSleep") || (x == "snorlaxSleepEye"))
 	{
@@ -523,6 +625,12 @@ void tran(std::string x)
 		{
 			diff_time = (clock() - now_time);
 		}
+	}
+	if (x == "pokeball")
+	{
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 1.0f, 2.3f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.3f, 0.3f));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f),  r_delta * r_press_num, glm::vec3(0, 1, 0));
 	}
 
 	
@@ -586,6 +694,10 @@ void paintGL(void) {
 		glBindVertexArray(sleepingZVaoID);
 		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 	}
+
+	tran("pokeball");
+	glBindVertexArray(pokeballVaoID);
+	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
@@ -618,15 +730,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_A && action == GLFW_PRESS) {
 		x_press_num -= 1;
+		angle = -90.0f;
 	}
 	if (key == GLFW_KEY_D && action == GLFW_PRESS) {
 		x_press_num += 1;
+		angle = 90.0f;
 	}
 	if (key == GLFW_KEY_W && action == GLFW_PRESS) {
 		z_press_num -= 1;
+		angle = 180.0f;
 	}
 	if (key == GLFW_KEY_S && action == GLFW_PRESS) {
 		z_press_num += 1;
+		angle = 0.0f;
 	}
 	if (key == GLFW_KEY_V && action == GLFW_PRESS) {
 		r_press_num -= 1;
