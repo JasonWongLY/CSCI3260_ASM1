@@ -30,6 +30,7 @@ int r_press_num = 0;
 float scale_delta = 0.05f;
 int scale_press_num = 0;
 bool sleep = false;
+int pre_x, pre_z;
 
 void get_OpenGL_info() {
 	// OpenGL information
@@ -124,6 +125,7 @@ GLuint snorlaxVaoID, snorlaxVboID, snorlaxIndicesVboID;
 GLuint snorlaxEyeVaoID, snorlaxEyeVboID, snorlaxEyeIndicesVboID;
 GLuint sleepingZVaoID, sleepingZVboID, sleepingZIndicesVboID;
 GLuint pokeballVaoID, pokeballVboID, pokeballIndicesVboID;
+GLuint bedVaoID, bedVboID, bedIndicesVboID;
 void sendDataToOpenGL() {
 	// TODO:
 	// create 3D objects and/or 2D objects and/or lines (points) here and bind to VAOs & VBOs
@@ -584,6 +586,69 @@ void sendDataToOpenGL() {
 	glGenBuffers(1, &pokeballIndicesVboID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pokeballIndicesVboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(pokeballIndices) * sizeof(GLushort), pokeballIndices, GL_STATIC_DRAW);
+
+
+	const GLfloat bed[] =
+	{
+		-1.5f, 0.55f, -1.2f,			0.741f, 0.741f, 0.741f,
+		-1.5f, 0.0f, -1.2f,			0.941f, 0.941f, 0.941f,
+		-0.5f, 0.55f, -1.2f,			0.941f, 0.941f, 0.941f,
+		-0.5f, 0.0f, -1.2f,			0.941f, 0.941f, 0.941f,
+		-1.5f, 0.0f, 1.5f,			0.941f, 0.941f, 0.941f,
+		-0.5f, 0.0f, 1.5f,			0.741f, 0.741f, 0.741f,
+		-0.5f, 0.55f, 1.5f,			0.941f, 0.941f, 0.941f,
+		-1.5f, 0.55f, 1.5f,			0.941f, 0.941f, 0.941f,
+
+		-0.4999f, 0.55f, -1.2f,		0.741f, 0.0f, 0.0f,
+		-0.4999f, 0.0f, -1.2f,		0.941f, 0.0f, 0.0f,
+		2.5f, 0.55f, -1.2f,			0.941f, 0.0f, 0.0f,
+		2.5f, 0.0f, -1.2f,			0.941f, 0.0f, 0.0f,
+		-0.4999f, 0.0f, 1.5f,		0.941f, 0.0f, 0.0f,
+		2.5f, 0.0f, 1.5f,			0.741f, 0.0f, 0.0f,
+		2.5f, 0.55f, 1.5f,			0.941f, 0.0f, 0.0f,
+		-0.4999f, 0.55f, 1.5f,		0.941f, 0.0f, 0.0f,
+	};
+
+	GLushort bedIndices[] =
+	{
+		0,2,3,
+		0,1,3,
+		0,2,6,
+		0,7,6,
+		0,7,4,
+		0,1,4,
+		5,6,2,
+		5,3,2,
+		5,3,1,
+		5,1,4,
+		5,6,7,
+		5,4,7,
+
+		0 + 8,2 + 8,3 + 8,
+		0 + 8,1 + 8,3 + 8,
+		0 + 8,2 + 8,6 + 8,
+		0 + 8,7 + 8,6 + 8,
+		0 + 8,7 + 8,4 + 8,
+		0 + 8,1 + 8,4 + 8,
+		5 + 8,6 + 8,2 + 8,
+		5 + 8,3 + 8,2 + 8,
+		5 + 8,3 + 8,1 + 8,
+		5 + 8,1 + 8,4 + 8,
+		5 + 8,6 + 8,7 + 8,
+		5 + 8,4 + 8,7 + 8,
+	};
+	glGenVertexArrays(1, &bedVaoID);
+	glBindVertexArray(bedVaoID);
+	glGenBuffers(1, &bedVboID);
+	glBindBuffer(GL_ARRAY_BUFFER, bedVboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(bed), bed, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glGenBuffers(1, &bedIndicesVboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bedIndicesVboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(bedIndices) * sizeof(GLushort), bedIndices, GL_STATIC_DRAW);
 }
 
 void tran(std::string x)
@@ -606,13 +671,13 @@ void tran(std::string x)
 	}
 	if ((x == "snorlaxSleep") || (x == "snorlaxSleepEye"))
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 1.0f, z_delta * z_press_num + 2.3f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.5f, -0.6f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	}
 	if (x == "sleepingZ")
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 3.0f, 2.0f, z_delta * z_press_num + 4.0f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 2.0f, 0.4f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.0001f*diff_time+0.3f, 0.0001*diff_time+0.3f, 3.0f));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0, 1, 0));
 		if (diff_time >= 2000)
@@ -628,12 +693,18 @@ void tran(std::string x)
 	}
 	if (x == "pokeball")
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 1.0f, 2.3f));
-		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f, 0.3f, 0.3f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.1f, 1.0f, 0.5f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f),  r_delta * r_press_num, glm::vec3(0, 1, 0));
 	}
 
-	
+	if (x == "bed")
+	{
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.0f, -1.0f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f , 0.5f , 0.5f ));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f) , glm::vec3(0, 1, 0));
+		
+	}
 
 	GLint modelTransformMatrixUniformLocation = glGetUniformLocation(programID, "modelTransformMatrix");
 	GLint modelRotateMatrixUniformLocation = glGetUniformLocation(programID, "modelRotationMatrix");
@@ -698,10 +769,15 @@ void paintGL(void) {
 	tran("pokeball");
 	glBindVertexArray(pokeballVaoID);
 	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+
+	tran("bed");
+	glBindVertexArray(bedVaoID);
+	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
-	if ((x_press_num == 5) && (z_press_num == -15)) {
+	if ((x_press_num <= 5) &&(x_press_num>=0) && (z_press_num >= -18) &&(z_press_num<=-11)) {
 
 		if (sleep == false)
 		{
@@ -713,12 +789,38 @@ void paintGL(void) {
 	}
 	
 	else sleep = false;
+	
+	if ((x_press_num < -2)&&(x_press_num>-12))
+	{
+		if ((z_press_num < -4) && (z_press_num > -14))
+		{
+			x_press_num = pre_x;
+			z_press_num = pre_z;
+		}
+	}
+
+	if ((z_press_num < 11) && (z_press_num > -18))
+	{
+		if ((x_press_num < 5) && (x_press_num > 0))
+		{
+			x_press_num = pre_x;
+			z_press_num = pre_z;
+		}
+	}
+
+	/*else if ((z_press_num < -4) && (z_press_num) > -14)
+	{
+		if (x_press_num < -2)	x_press_num = -2;
+		if (x_press_num < -13)	x_press_num = -13;
+	}*/
 	if (x_press_num > 5) x_press_num = 5;
 	if (x_press_num < -20) x_press_num = -20;
 	if (z_press_num > 3) z_press_num = 3;
-	if (z_press_num < -15) z_press_num = -15;
+	if (z_press_num < -18) z_press_num = -18;
 	if (scale_press_num > 4) scale_press_num = 4;
 	if (scale_press_num < -2) scale_press_num = -2;
+	pre_x = x_press_num;
+	pre_z = z_press_num;
 	glFlush();
 
 }
