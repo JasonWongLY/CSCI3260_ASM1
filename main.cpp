@@ -31,6 +31,7 @@ float scale_delta = 0.05f;
 int scale_press_num = 0;
 bool sleep = false;
 int pre_x, pre_z;
+bool poo = false;
 
 void get_OpenGL_info() {
 	// OpenGL information
@@ -126,6 +127,8 @@ GLuint snorlaxEyeVaoID, snorlaxEyeVboID, snorlaxEyeIndicesVboID;
 GLuint sleepingZVaoID, sleepingZVboID, sleepingZIndicesVboID;
 GLuint pokeballVaoID, pokeballVboID, pokeballIndicesVboID;
 GLuint bedVaoID, bedVboID, bedIndicesVboID;
+GLuint toiletVaoID, toiletVboID, toiletIndicesVboID;
+
 void sendDataToOpenGL() {
 	// TODO:
 	// create 3D objects and/or 2D objects and/or lines (points) here and bind to VAOs & VBOs
@@ -590,9 +593,9 @@ void sendDataToOpenGL() {
 
 	const GLfloat bed[] =
 	{
-		-1.5f, 0.55f, -1.2f,			0.741f, 0.741f, 0.741f,
+		-1.5f, 0.55f, -1.2f,		0.741f, 0.741f, 0.741f,
 		-1.5f, 0.0f, -1.2f,			0.941f, 0.941f, 0.941f,
-		-0.5f, 0.55f, -1.2f,			0.941f, 0.941f, 0.941f,
+		-0.5f, 0.55f, -1.2f,		0.941f, 0.941f, 0.941f,
 		-0.5f, 0.0f, -1.2f,			0.941f, 0.941f, 0.941f,
 		-1.5f, 0.0f, 1.5f,			0.941f, 0.941f, 0.941f,
 		-0.5f, 0.0f, 1.5f,			0.741f, 0.741f, 0.741f,
@@ -649,6 +652,113 @@ void sendDataToOpenGL() {
 	glGenBuffers(1, &bedIndicesVboID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bedIndicesVboID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(bedIndices) * sizeof(GLushort), bedIndices, GL_STATIC_DRAW);
+
+	const GLfloat toilet[] =
+	{
+		-1.0f, +0.25f, -1.0f,		0.741f, 0.741f, 0.741f,
+		-1.0f, -1.0f, -1.0f,	    0.941f, 0.941f, 0.941f,
+		+1.0f, +0.25f, -1.0f,		0.941f, 0.941f, 0.941f,
+		+1.0f, -1.0f, -1.0f,		0.741f, 0.741f, 0.741f,
+		-1.0f, -1.0f, +1.0f,		0.741f, 0.741f, 0.741f,
+		+1.0f, -1.0f, +1.0f,		0.941f, 0.941f, 0.941f,
+		+1.0f, +0.25f, +1.0f,		0.741f, 0.741f, 0.741f,
+		-1.0f, +0.25f, +1.0f,		0.941f, 0.941f, 0.941f,
+
+		/*-0.8f, +0.25f, -0.8f,	0.741f, 0.741f, 0.741f,
+		-0.8f, -1.0f, -0.8f,	0.941f, 0.941f, 0.941f,
+		+0.8f, +0.25f, -0.8f,	0.941f, 0.941f, 0.941f,
+		+0.8f, -1.0f, -0.8f,	0.741f, 0.741f, 0.741f,
+		-0.8f, -1.0f, +0.8f,	0.741f, 0.741f, 0.741f,
+		+0.8f, -1.0f, +0.8f,	0.941f, 0.941f, 0.941f,
+		+0.8f, +0.25f, +0.8f,	0.741f, 0.741f, 0.741f,
+		-0.8f, +0.25f, +0.8f,	0.941f, 0.941f, 0.941f,*/
+
+		-2.0f, +2.0f, -1.0f,    0.741f, 0.741f, 0.741f,
+		-2.0f, -1.0f, -1.0f,    0.941f, 0.941f, 0.941f,
+		-1.0f, +2.0f, -1.0f,    0.941f, 0.941f, 0.941f,
+		-1.0f, -1.0f, -1.0f,    0.941f, 0.941f, 0.941f,
+		-2.0f, -1.0f, +1.0f,    0.941f, 0.941f, 0.941f,
+		-1.0f, -1.0f, +1.0f,    0.741f, 0.741f, 0.741f,
+		-1.0f, +2.0f, +1.0f,    0.941f, 0.941f, 0.941f,
+		-2.0f, +2.0f, +1.0f,    0.941f, 0.941f, 0.941f,
+
+		-0.8f, +0.2501f, -0.8f,	0.653f, 0.653f, 0.653f,
+		+0.8f, +0.2501f, -0.8f,	0.653f, 0.653f, 0.653f,
+		+0.8f, +0.2501f, +0.8f,	0.653f, 0.653f, 0.653f,
+		-0.8f, +0.2501f, +0.8f,	0.653f, 0.653f, 0.653f,
+	};
+
+	GLushort toiletIndices[] =
+	{
+		/*0,2,3,
+		0,1,3,
+		0,7,4,
+		0,1,4,
+		5,6,2,
+		5,3,2,
+		5,6,7,
+		5,4,7,
+
+		0,8,7,
+		8,7,15,
+		0,8,2,
+		8,2,10,
+		10,14,2,
+		14,2,6,
+		7,6,15,
+		6,15,14,*/
+
+		//15,8,12,
+		//8,12,9,
+		//9,8,11,
+		//8,11,10,
+		//15,14,12,
+		//12,14,13,
+		//13,14,11,
+		//14,11,10,
+
+		0,2,3,
+		0,1,3,
+		0,2,6,
+		0,7,6,
+		0,7,4,
+		0,1,4,
+		5,6,2,
+		5,3,2,
+		5,3,1,
+		5,1,4,
+		5,6,7,
+		5,4,7,
+
+		0+8,2+8,3+8,
+		0+8,1+8,3+8,
+		0+8,2+8,6+8,
+		0+8,7+8,6+8,
+		0+8,7+8,4+8,
+		0+8,1+8,4+8,
+		5+8,6+8,2+8,
+		5+8,3+8,2+8,
+		5+8,3+8,1+8,
+		5+8,1+8,4+8,
+		5+8,6+8,7+8,
+		5+8,4+8,7+8,
+
+		16,17,18,
+		16,18,19,
+	};
+
+	glGenVertexArrays(1, &toiletVaoID);
+	glBindVertexArray(toiletVaoID);
+	glGenBuffers(1, &toiletVboID);
+	glBindBuffer(GL_ARRAY_BUFFER, toiletVboID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(toilet), toilet, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (char*)(3 * sizeof(float)));
+	glGenBuffers(1, &toiletIndicesVboID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, toiletIndicesVboID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(toiletIndices) * sizeof(GLushort), toiletIndices, GL_STATIC_DRAW);
 }
 
 void tran(std::string x)
@@ -674,6 +784,24 @@ void tran(std::string x)
 		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.5f, -0.6f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
+	}
+	if ((x == "snorlaxPoo") || (x == "snorlaxEyePoo"))
+	{
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 1.3f, -1.3f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f+scale_delta*scale_press_num, 0.3f+ scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0));
+		if (diff_time >= 2000)
+		{
+			now_time = clock();
+			diff_time = 0;
+			start_time = 0;
+			poo = false;
+			scale_press_num -= 1;
+		}
+		else
+		{
+			diff_time = (clock() - now_time);
+		}
 	}
 	if (x == "sleepingZ")
 	{
@@ -704,6 +832,13 @@ void tran(std::string x)
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f , 0.5f , 0.5f ));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f) , glm::vec3(0, 1, 0));
 		
+	}
+
+	if (x == "toilet")
+	{
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 1.0f, -1.5f));
+		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
 	}
 
 	GLint modelTransformMatrixUniformLocation = glGetUniformLocation(programID, "modelTransformMatrix");
@@ -742,7 +877,7 @@ void paintGL(void) {
 	glBindVertexArray(groundVaoID);
 	glDrawArrays(GL_TRIANGLES, 0, 6);  //render primitives from array data
 
-	if (sleep == false) {
+	if ((sleep == false) && (poo==false)) {
 		tran("snorlax");
 		glBindVertexArray(snorlaxVaoID);
 		glDrawElements(GL_TRIANGLES, 120 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
@@ -751,7 +886,7 @@ void paintGL(void) {
 		glBindVertexArray(snorlaxEyeVaoID);
 		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 	}
-	else
+	else if (sleep==true)
 	{
 		tran("snorlaxSleep");
 		glBindVertexArray(snorlaxVaoID);
@@ -765,6 +900,16 @@ void paintGL(void) {
 		glBindVertexArray(sleepingZVaoID);
 		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 	}
+	else if (poo == true)
+	{
+		tran("snorlaxPoo");
+		glBindVertexArray(snorlaxVaoID);
+		glDrawElements(GL_TRIANGLES, 120 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+
+		tran("snorlaxEyePoo");
+		glBindVertexArray(snorlaxEyeVaoID);
+		glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
+	}
 
 	tran("pokeball");
 	glBindVertexArray(pokeballVaoID);
@@ -774,6 +919,9 @@ void paintGL(void) {
 	glBindVertexArray(bedVaoID);
 	glDrawElements(GL_TRIANGLES, 40 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 
+	tran("toilet");
+	glBindVertexArray(toiletVaoID);
+	glDrawElements(GL_TRIANGLES, 80 * sizeof(float), GL_UNSIGNED_SHORT, nullptr);
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
@@ -787,7 +935,6 @@ void paintGL(void) {
 		sleep = true;
 
 	}
-	
 	else sleep = false;
 	
 	if ((x_press_num < -2)&&(x_press_num>-12))
@@ -799,7 +946,7 @@ void paintGL(void) {
 		}
 	}
 
-	if ((z_press_num < 11) && (z_press_num > -18))
+	if ((z_press_num < -11) && (z_press_num > -18))
 	{
 		if ((x_press_num < 5) && (x_press_num > 0))
 		{
@@ -807,6 +954,16 @@ void paintGL(void) {
 			z_press_num = pre_z;
 		}
 	}
+
+	if ((x_press_num <= -15) && (x_press_num >= -20) && (z_press_num <= -13) && (z_press_num >= -18))
+	{
+		if (poo == false)
+		{
+			now_time = clock();
+		}
+		poo = true;
+	}
+	else poo = false;
 
 	/*else if ((z_press_num < -4) && (z_press_num) > -14)
 	{
