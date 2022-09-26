@@ -13,6 +13,7 @@ Type your name and student ID here
 #include <iostream>
 #include <fstream>
 #include <time.h>
+#include <cmath>
 
 clock_t now_time;
 int start_time = 0;
@@ -32,6 +33,8 @@ int scale_press_num = 0;
 bool sleep = false;
 int pre_x, pre_z;
 bool poo = false;
+int viewPos = 0;
+
 
 void get_OpenGL_info() {
 	// OpenGL information
@@ -775,19 +778,19 @@ void tran(std::string x)
 	}
 	if ((x == "snorlax") || (x=="snorlaxEye"))
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 1.0f, z_delta * z_press_num + 2.3f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(x_delta * x_press_num + 1.5f, 0.5f, z_delta * z_press_num + 2.3f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0, 1, 0));
 	}
 	if ((x == "snorlaxSleep") || (x == "snorlaxSleepEye"))
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.5f, -0.6f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, 0.5f, -2.6f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1, 0, 0));
 	}
 	if ((x == "snorlaxPoo") || (x == "snorlaxEyePoo"))
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 1.3f, -1.3f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.8f, -2.5f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.3f+scale_delta*scale_press_num, 0.3f+ scale_delta * scale_press_num, 0.3f + scale_delta * scale_press_num));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(0.0f), glm::vec3(0, 1, 0));
 		if (diff_time >= 2000)
@@ -821,14 +824,14 @@ void tran(std::string x)
 	}
 	if (x == "pokeball")
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.1f, 1.0f, 0.5f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.1f, 0.5f, 0.5f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f),  r_delta * r_press_num, glm::vec3(0, 1, 0));
 	}
 
 	if (x == "bed")
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(2.5f, 1.0f, -1.0f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(3.0f, -0.0f, -3.0f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f , 0.5f , 0.5f ));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f) , glm::vec3(0, 1, 0));
 		
@@ -836,7 +839,7 @@ void tran(std::string x)
 
 	if (x == "toilet")
 	{
-		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-2.5f, 1.0f, -1.5f));
+		modelTransformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.5f, -2.7f));
 		modelScalingMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
 		modelRotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
 	}
@@ -849,10 +852,18 @@ void tran(std::string x)
 	glUniformMatrix4fv(modelRotateMatrixUniformLocation, 1, GL_FALSE, &modelRotationMatrix[0][0]);
 	glUniformMatrix4fv(modelScalingMatrixUniformLocation, 1, GL_FALSE, &modelScalingMatrix[0][0]);
 
-	glm::mat4 Projection = glm::perspective(30.0f, 1.0f, 2.0f, 20.0f);
+	/*glm::mat4 Projection = glm::perspective(30.0f, 1.0f, 2.0f, 20.0f);
 	glm::mat4 Lookat = glm::lookAt(
 		glm::vec3(0, 5.0, 0),
 		glm::vec3(0, 0, -10),
+		glm::vec3(0, -1, 0)
+	);*/
+	float camX = sin(glm::radians(9.0f) * viewPos) * 5;
+	float camZ = cos(glm::radians(9.0f) * viewPos) * 5 - 5;
+	glm::mat4 Projection = glm::perspective(30.0f, 1.0f, 2.0f, 20.0f);
+	glm::mat4 Lookat = glm::lookAt(
+		glm::vec3(camX, 5.0, camZ),
+		glm::vec3(0, 0, -5),
 		glm::vec3(0, -1, 0)
 	);
 	glm::mat4 Tmp = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.5f, -5.0f));;
@@ -865,8 +876,7 @@ void paintGL(void) {
 	// always run
 	// TODO:
 	// render your objects and control the transformation here
-
-	glClearColor(0.0f, 0.0f, 0.15f, 0.0f);  //specify the background color
+	glClearColor(0.5294f, 0.8078f, 0.9216f, 0.0f);  //specify the background color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glClearDepth(1.0f);
@@ -925,7 +935,7 @@ void paintGL(void) {
 	//// with indexing (uncomment to use)
 	//glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
 
-	if ((x_press_num <= 5) &&(x_press_num>=0) && (z_press_num >= -18) &&(z_press_num<=-11)) {
+	if ((x_press_num <= 10) &&(x_press_num>=3) && (z_press_num <= -18) &&(z_press_num>=-28)) {
 
 		if (sleep == false)
 		{
@@ -946,16 +956,16 @@ void paintGL(void) {
 		}
 	}
 
-	if ((z_press_num < -11) && (z_press_num > -18))
+	if ((z_press_num < -18) && (z_press_num > -28))
 	{
-		if ((x_press_num < 5) && (x_press_num > 0))
+		if ((x_press_num < 10) && (x_press_num > 3))
 		{
 			x_press_num = pre_x;
 			z_press_num = pre_z;
 		}
 	}
 
-	if ((x_press_num <= -15) && (x_press_num >= -20) && (z_press_num <= -13) && (z_press_num >= -18))
+	if ((x_press_num <= -19) && (x_press_num >= -25) && (z_press_num <= -21) && (z_press_num >= -28))
 	{
 		if (poo == false)
 		{
@@ -965,15 +975,23 @@ void paintGL(void) {
 	}
 	else poo = false;
 
+	if ((z_press_num < -21) && (z_press_num > -28))
+	{
+		if ((x_press_num < -19) && (x_press_num > -25))
+		{
+			x_press_num = pre_x;
+			z_press_num = pre_z;
+		}
+	}
 	/*else if ((z_press_num < -4) && (z_press_num) > -14)
 	{
 		if (x_press_num < -2)	x_press_num = -2;
 		if (x_press_num < -13)	x_press_num = -13;
 	}*/
-	if (x_press_num > 5) x_press_num = 5;
-	if (x_press_num < -20) x_press_num = -20;
-	if (z_press_num > 3) z_press_num = 3;
-	if (z_press_num < -18) z_press_num = -18;
+	if (x_press_num > 10) x_press_num = 10;
+	if (x_press_num < -25) x_press_num = -25;
+	if (z_press_num > 6) z_press_num = 6;
+	if (z_press_num < -28) z_press_num = -28;
 	if (scale_press_num > 4) scale_press_num = 4;
 	if (scale_press_num < -2) scale_press_num = -2;
 	pre_x = x_press_num;
@@ -1014,6 +1032,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	}
 	if (key == GLFW_KEY_X && action == GLFW_PRESS) {
 		scale_press_num += 1;
+	}
+	if (key == GLFW_KEY_N && action == GLFW_PRESS){
+		viewPos -= 1;
+	}
+	if (key == GLFW_KEY_M && action == GLFW_PRESS) {
+		viewPos += 1;
 	}
 }
 
